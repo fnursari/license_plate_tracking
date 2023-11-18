@@ -96,6 +96,18 @@ public class AdminService {
                 .build();
     }
 
+    public ResponseMessage<AdminResponse> getAdminByPhoneNumber(String phone) {
+        if (!adminRepository.existsByPhoneNumber(phone)){
+            throw new ResourceNotFoundException(String.format(Messages.NOT_FOUND_USER_MESSAGE_PARAM,"phone number",phone));
+        }
+
+
+        return ResponseMessage.<AdminResponse>builder()
+                .httpStatus(HttpStatus.OK)
+                .object(adminDto.mapAdminToAdminResponse(adminRepository.getAdminsByPhoneNumber(phone)))
+                .build();
+    }
+
 
     public List<AdminResponse> getAdminByName(String name) {
 
@@ -156,4 +168,6 @@ public class AdminService {
 
 
     }
+
+
 }

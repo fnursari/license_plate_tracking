@@ -56,6 +56,11 @@ public class AdminController {
         return adminService.getAdminByPlate(plate);
     }
 
+    @GetMapping("/searchByPhone/{phoneNumber}")
+    public ResponseMessage<AdminResponse> getAdminByPhoneNumber(@PathVariable String phoneNumber){
+        return adminService.getAdminByPhoneNumber(phoneNumber);
+    }
+
     @GetMapping("/searchByName/{name}")
     public List<AdminResponse> getAdminByName(@PathVariable String name){
         return adminService.getAdminByName(name);
