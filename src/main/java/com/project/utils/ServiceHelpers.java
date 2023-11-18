@@ -1,6 +1,8 @@
 package com.project.utils;
 
+import com.project.entity.abstracts.User;
 import com.project.exception.ConflictException;
+import com.project.payload.request.abstracts.BaseUserRequest;
 import com.project.repository.AdminRepository;
 import com.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +45,12 @@ public class ServiceHelpers {
     public Pageable getPageableWithProperties(int page, int size){
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
         return pageable;
+    }
+
+    public static boolean checkUniqueProperties(User user, BaseUserRequest baseUserRequest){
+        return user.getPlate().equalsIgnoreCase(baseUserRequest.getPlate())
+                || user.getPhoneNumber().equalsIgnoreCase(baseUserRequest.getPhoneNumber())
+                || user.getEmail().equalsIgnoreCase(baseUserRequest.getEmail());
     }
 
 

@@ -15,4 +15,5 @@ public class Messages {
     public static final String ROLE_NOT_FOUND = "There is no role like that, check the database";
     public static final String ROLE_ALREADY_EXIST = "Role already exist in DB";
     public static final String USER_DELETE = "%s is deleted successfully";
+    public static final String USER_UPDATE = "%s is updated successfully";
 }

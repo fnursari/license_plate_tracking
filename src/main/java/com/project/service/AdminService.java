@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,9 +64,9 @@ public class AdminService {
 
 
     public ResponseMessage deleteAdminById(Long userId) {
-        Admin admin =isAdminExists(userId);
+        Optional<Admin> admin =isAdminExists(userId);
 
-        if(admin.isBuilt_in()){
+        if(admin.get().isBuilt_in()){
             throw new ForbiddenException(Messages.NOT_PERMITTED_METHOD_MESSAGE);
         }
 
@@ -111,9 +112,14 @@ public class AdminService {
 
 
 
-    private Admin isAdminExists(Long id){
-        return adminRepository.findById(id).orElseThrow(
-                ()-> new ResourceNotFoundException(String.format(Messages.NOT_FOUND_USER_MESSAGE,id)));
+    private Optional<Admin> isAdminExists(Long id){
+        Optional<Admin> admin = adminRepository.findById(id);
+
+        if (!adminRepository.findById(id).isPresent()) {
+            throw new ResourceNotFoundException(String.format(Messages.NOT_FOUND_USER_MESSAGE, id));
+        } else {
+            return admin;
+        }
     }
 
 
@@ -125,5 +131,29 @@ public class AdminService {
 
         return admin.stream().map(adminDto::mapAdminToAdminResponse)
                 .collect(Collectors.toList());
+    }
+
+    public ResponseMessage<AdminResponse> update(AdminRequest adminRequest, Long userId) {
+
+        Optional<Admin> admin = isAdminExists(userId);
+
+        //email, plate, phone number unique olmalı
+        if (!ServiceHelpers.checkUniqueProperties(admin.get(), adminRequest)) {
+            serviceHelpers.checkDuplicate(adminRequest.getEmail(),
+                    adminRequest.getPlate(),
+                    adminRequest.getPhoneNumber());
+        }
+
+        Admin updatedAdmin = adminDto.mapAdminRequestToUpdatedAdmin(adminRequest, userId);
+        updatedAdmin.setPassword(adminRequest.getPassword());
+
+        return ResponseMessage.<AdminResponse>builder()
+                .message(String.format(Messages.USER_UPDATE,"admin"))
+                .httpStatus(HttpStatus.OK)
+                .object(adminDto.mapAdminToAdminResponse(adminRepository.save(updatedAdmin)))
+                .build();
+
+
+
     }
 }

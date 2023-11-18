@@ -66,5 +66,14 @@ public class AdminController {
         return adminService.getAdminBySurname(surname);
     }
 
+    @PutMapping("/update/{userId}")
+    public ResponseMessage<AdminResponse> update(@RequestBody @Valid AdminRequest adminRequest,
+                                                 @PathVariable Long userId){
+        return adminService.update(adminRequest, userId);
+
+    }
+
+
+
 
 }
