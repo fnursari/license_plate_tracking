@@ -51,7 +51,7 @@ public class AdminController {
 
     }
 
-    @GetMapping("/search/{plate}")
+    @GetMapping("/search/plate/{plate}")
     public ResponseMessage<AdminResponse> getAdminByPlate(@PathVariable String plate){
         return adminService.getAdminByPlate(plate);
     }
