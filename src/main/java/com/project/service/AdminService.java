@@ -14,13 +14,11 @@ import com.project.utils.ServiceHelpers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -98,20 +96,18 @@ public class AdminService {
     }
 
 
-//    public ResponseMessage<List<AdminResponse>> getAdminByName(String name) {
-//        if(adminRepository.existsByName(name)){
-//            throw new ResourceNotFoundException(String.format(Messages.NOT_FOUND_USER_MESSAGE_PARAM,"name",name));
-//        }
-//        List<Admin> admin = adminRepository.findByNameContaining(name);
-//
-//
-//        return ResponseMessage.<List<AdminResponse>>builder()
-//                .httpStatus(HttpStatus.OK)
-//                .object(admin.stream().map(adminDto::mapAdminToAdminResponse)
-//                        .collect(Collectors.toList()))
-//                .build();
-//
-//    }
+    public List<AdminResponse> getAdminByName(String name) {
+
+        if(!adminRepository.existsByName(name)){
+            throw new ResourceNotFoundException(String.format(Messages.NOT_FOUND_USER_MESSAGE_PARAM,"name",name));
+        }
+
+        List<Admin> admin = adminRepository.findByName(name);
+
+        return admin.stream().map(adminDto::mapAdminToAdminResponse)
+                        .collect(Collectors.toList());
+
+    }
 
 
 
@@ -121,4 +117,13 @@ public class AdminService {
     }
 
 
+    public List<AdminResponse> getAdminBySurname(String surname) {
+        if(!adminRepository.existsBySurname(surname)){
+            throw new ResourceNotFoundException(String.format(Messages.NOT_FOUND_USER_MESSAGE_PARAM,"surname",surname));
+        }
+        List<Admin> admin = adminRepository.findBySurname(surname);
+
+        return admin.stream().map(adminDto::mapAdminToAdminResponse)
+                .collect(Collectors.toList());
+    }
 }

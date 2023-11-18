@@ -51,15 +51,20 @@ public class AdminController {
 
     }
 
-    @GetMapping("/search/plate/{plate}")
+    @GetMapping("/searchByPlate/{plate}")
     public ResponseMessage<AdminResponse> getAdminByPlate(@PathVariable String plate){
         return adminService.getAdminByPlate(plate);
     }
 
-//    @GetMapping("/search/{name}")
-//    public ResponseMessage<List<AdminResponse>> getAdminByName(@PathVariable String name){
-//        return adminService.getAdminByName(name);
-//    }
+    @GetMapping("/searchByName/{name}")
+    public List<AdminResponse> getAdminByName(@PathVariable String name){
+        return adminService.getAdminByName(name);
+    }
+
+    @GetMapping("/searchBySurname/{surname}")
+    public List<AdminResponse> getAdminBySurname(@PathVariable String surname){
+        return adminService.getAdminBySurname(surname);
+    }
 
 
 }
