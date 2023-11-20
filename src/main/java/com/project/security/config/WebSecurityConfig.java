@@ -121,7 +121,8 @@ public class WebSecurityConfig {
 			"/css/**",
 			"/js/**",
 			"/auth/login",
-			"/user/save"
+			"/user",
+			"/search"
 
 	};
 

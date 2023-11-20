@@ -8,6 +8,8 @@ import com.project.utils.Messages;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserRoleService {
@@ -18,5 +20,18 @@ public class UserRoleService {
         return userRoleRepository.findByEnumRoleEquals(roleType).orElseThrow(
                 ()-> new ConflictException(Messages.ROLE_NOT_FOUND)
         );
+    }
+
+    public List<UserRole> getAllUSerRole(){
+        return  userRoleRepository.findAll();
+    }
+
+    public UserRole save(RoleType roleType){
+        if (userRoleRepository.existsByEnumRoleEquals(roleType)){
+            throw new ConflictException(Messages.ROLE_ALREADY_EXIST);
+        }
+
+        UserRole userRole = UserRole.builder().roleType(roleType).build();
+        return userRoleRepository.save(userRole);
     }
 }

@@ -182,5 +182,9 @@ public class AdminService {
                 .build();
     }
 
+    public long countAllAdmins(){
+        return adminRepository.count();
+    }
+
 
 }
