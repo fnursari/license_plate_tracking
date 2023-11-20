@@ -14,11 +14,11 @@ public interface AdminRepository extends JpaRepository<Admin,Long> {
     boolean existsBySurname(String surname);
 
     Admin getAdminsByPlate(String plate);
-    List<Admin> getAdminsByName(String name);
-    List<Admin> getAdminsBySurname(String surname);
     Admin getAdminsByPhoneNumber(String phoneNumber);
     Admin getAdminsByEmail(String email);
 
     List<Admin> findByName(String name);
     List<Admin> findBySurname(String surname);
+
+    Admin findByEmailEquals(String email);
 }

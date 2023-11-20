@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +35,8 @@ public class AdminService {
 
     private final UserRoleService userRoleService;
 
+    private final PasswordEncoder passwordEncoder;
+
 
 
     public ResponseMessage<AdminResponse> save(AdminRequest adminRequest) {
@@ -42,6 +45,7 @@ public class AdminService {
         Admin admin = adminDto.mapAdminRequestToAdmin(adminRequest);
         admin.setBuilt_in(false);
         admin.setUserRole(userRoleService.getUserRole(RoleType.ADMIN));
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
 
         if (Objects.equals(adminRequest.getEmail(),"fnursari96@gmail.com")){
             admin.setBuilt_in(true);
@@ -109,6 +113,18 @@ public class AdminService {
     }
 
 
+    public ResponseMessage<AdminResponse> getAdminByEmail(String email) {
+        if (!adminRepository.existsByEmail(email)){
+            throw new ResourceNotFoundException(String.format(Messages.NOT_FOUND_USER_MESSAGE_PARAM,"email",email));
+        }
+
+
+        return ResponseMessage.<AdminResponse>builder()
+                .httpStatus(HttpStatus.OK)
+                .object(adminDto.mapAdminToAdminResponse(adminRepository.getAdminsByEmail(email)))
+                .build();
+    }
+
     public List<AdminResponse> getAdminByName(String name) {
 
         if(!adminRepository.existsByName(name)){
@@ -157,16 +173,13 @@ public class AdminService {
         }
 
         Admin updatedAdmin = adminDto.mapAdminRequestToUpdatedAdmin(adminRequest, userId);
-        updatedAdmin.setPassword(adminRequest.getPassword());
+        updatedAdmin.setPassword(passwordEncoder.encode(adminRequest.getPassword()));
 
         return ResponseMessage.<AdminResponse>builder()
                 .message(String.format(Messages.USER_UPDATE,"admin"))
                 .httpStatus(HttpStatus.OK)
                 .object(adminDto.mapAdminToAdminResponse(adminRepository.save(updatedAdmin)))
                 .build();
-
-
-
     }
 
 

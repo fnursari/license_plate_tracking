@@ -61,6 +61,11 @@ public class AdminController {
         return adminService.getAdminByPhoneNumber(phoneNumber);
     }
 
+    @GetMapping("/searchByEmail/{email}")
+    public ResponseMessage<AdminResponse> getAdminByEmail(@PathVariable String email){
+        return adminService.getAdminByEmail(email);
+    }
+
     @GetMapping("/searchByName/{name}")
     public List<AdminResponse> getAdminByName(@PathVariable String name){
         return adminService.getAdminByName(name);
