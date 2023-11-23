@@ -12,7 +12,7 @@ public interface UserRepository extends JpaRepository<Users, Long> {
 
     Users findByEmailEquals(String email);
 
-    Users getAdminsByPlate(String plate);
+    Users getUserByPlate(String plate);
 
     Users getUserByPhoneNumber(String phone);
 
@@ -25,4 +25,6 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     boolean existsBySurname(String surname);
 
     List<Users> findBySurname(String surname);
+
+    Users getUserById(Long id);
 }

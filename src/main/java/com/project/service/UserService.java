@@ -92,7 +92,7 @@ public class UserService {
 
         //email, plate, phone number unique olmalı
         if (!ServiceHelpers.checkUniqueProperties(user.get(), userRequest)) {
-            serviceHelpers.checkDuplicate(userRequest.getEmail(),
+            serviceHelpers.checkDuplicateForUpdate(userId, RoleType.USER, userRequest.getEmail(),
                     userRequest.getPlate(),
                     userRequest.getPhoneNumber());
         }
@@ -115,7 +115,7 @@ public class UserService {
 
         return ResponseMessage.<UserResponse>builder()
                 .httpStatus(HttpStatus.OK)
-                .object(userDto.mapUserToUserResponse(userRepository.getAdminsByPlate(plate)))
+                .object(userDto.mapUserToUserResponse(userRepository.getUserByPlate(plate)))
                 .build();
     }
 

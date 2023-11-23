@@ -122,6 +122,7 @@ public class WebSecurityConfig {
 			"/js/**",
 			"/auth/login",
 			"/user/save",
+			"/admin/save"
 
 	};
 

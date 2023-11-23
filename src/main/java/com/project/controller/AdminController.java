@@ -20,7 +20,7 @@ public class AdminController {
     private final AdminService adminService;
 
     @PostMapping("/save")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+//    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseMessage<AdminResponse> save(@RequestBody @Valid AdminRequest adminRequest){
         return adminService.save(adminRequest);
 

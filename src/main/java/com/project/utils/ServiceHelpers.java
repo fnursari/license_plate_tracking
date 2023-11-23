@@ -1,7 +1,11 @@
 package com.project.utils;
 
 import com.project.entity.abstracts.User;
+import com.project.entity.concretes.Admin;
+import com.project.entity.concretes.Users;
+import com.project.entity.enums.RoleType;
 import com.project.exception.ConflictException;
+import com.project.exception.ResourceNotFoundException;
 import com.project.payload.request.abstracts.BaseUserRequest;
 import com.project.repository.AdminRepository;
 import com.project.repository.UserRepository;
@@ -49,8 +53,37 @@ public class ServiceHelpers {
 
     public static boolean checkUniqueProperties(User user, BaseUserRequest baseUserRequest){
         return user.getPlate().equalsIgnoreCase(baseUserRequest.getPlate())
-                || user.getPhoneNumber().equalsIgnoreCase(baseUserRequest.getPhoneNumber())
-                || user.getEmail().equalsIgnoreCase(baseUserRequest.getEmail());
+                && user.getPhoneNumber().equalsIgnoreCase(baseUserRequest.getPhoneNumber())
+                && user.getEmail().equalsIgnoreCase(baseUserRequest.getEmail());
+    }
+
+    public void checkDuplicateForUpdate(Long id, RoleType roleType, String email, String plate, String phoneNumber){
+
+        if (roleType.equals(RoleType.ADMIN)){
+            Admin admin = adminRepository.getAdminById(id);
+
+            if((adminRepository.existsByEmail(email) || userRepository.existsByEmail(email)) && !email.equals(admin.getEmail())){
+                throw new ConflictException(String.format(Messages.ALREADY_REGISTER_USER_EMAIL,email));
+            } else if ((adminRepository.existsByPlate(plate) || userRepository.existsByPlate(plate)) && !plate.equals(admin.getPlate())) {
+                throw new ConflictException(String.format(Messages.ALREADY_REGISTER_USER_PLATE,plate));
+            } else if ((adminRepository.existsByPhoneNumber(phoneNumber) || userRepository.existsByPhoneNumber(phoneNumber)) && !phoneNumber.equals(admin.getPhoneNumber())) {
+                throw new ConflictException(String.format(Messages.ALREADY_REGISTER_USER_PHONE_NUMBER,phoneNumber));
+            }
+
+        } else if (roleType.equals(RoleType.USER)){
+            Users user = userRepository.getUserById(id);
+
+            if((adminRepository.existsByEmail(email) || userRepository.existsByEmail(email)) && !email.equals(user.getEmail())){
+                throw new ConflictException(String.format(Messages.ALREADY_REGISTER_USER_EMAIL,email));
+            } else if ((adminRepository.existsByPlate(plate) || userRepository.existsByPlate(plate)) && !plate.equals(user.getPlate())) {
+                throw new ConflictException(String.format(Messages.ALREADY_REGISTER_USER_PLATE,plate));
+            } else if ((adminRepository.existsByPhoneNumber(phoneNumber) || userRepository.existsByPhoneNumber(phoneNumber)) && !phoneNumber.equals(user.getPhoneNumber())) {
+                throw new ConflictException(String.format(Messages.ALREADY_REGISTER_USER_PHONE_NUMBER,phoneNumber));
+            }
+
+        }
+
+
     }
 
 

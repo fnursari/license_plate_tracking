@@ -165,9 +165,13 @@ public class AdminService {
 
         Optional<Admin> admin = isAdminExists(userId);
 
+        if (admin.get().isBuilt_in()){
+            throw new ForbiddenException(Messages.NOT_PERMITTED_METHOD_MESSAGE);
+        }
+
         //email, plate, phone number unique olmalı
         if (!ServiceHelpers.checkUniqueProperties(admin.get(), adminRequest)) {
-            serviceHelpers.checkDuplicate(adminRequest.getEmail(),
+            serviceHelpers.checkDuplicateForUpdate(userId, RoleType.ADMIN, adminRequest.getEmail(),
                     adminRequest.getPlate(),
                     adminRequest.getPhoneNumber());
         }

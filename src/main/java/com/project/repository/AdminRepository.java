@@ -21,4 +21,6 @@ public interface AdminRepository extends JpaRepository<Admin,Long> {
     List<Admin> findBySurname(String surname);
 
     Admin findByEmailEquals(String email);
+
+    Admin getAdminById(Long id);
 }
