@@ -36,7 +36,7 @@ public class AuthController {
 		String email = loginRequest.getEmail();
 		String password = loginRequest.getPassword();
 
-		//we authenticate the username and the password
+		//we authenticate the email and the password
 		Authentication authentication =
 				authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email,password));
 
